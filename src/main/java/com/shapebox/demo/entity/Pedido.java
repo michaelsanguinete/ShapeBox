@@ -2,12 +2,10 @@ package com.shapebox.demo.entity;
 
 import com.shapebox.demo.entity.enums.StatusPedido;
 import jakarta.persistence.*;
-import jdk.dynalink.linker.LinkerServices;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,10 +21,17 @@ public class Pedido {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "pedido")
+    @ManyToMany
+    @JoinTable(
+            name = "pedido_produto",
+            joinColumns = @JoinColumn(name = "pedido_id"),
+            inverseJoinColumns = @JoinColumn(name = "produto_id")
+    )
     private List<Produto> produtos;
 
     private LocalDateTime dataPedido;
+
+    private LocalDateTime dataFim;
 
     private StatusPedido status;
 }
