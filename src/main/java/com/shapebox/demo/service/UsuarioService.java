@@ -1,5 +1,6 @@
 package com.shapebox.demo.service;
 
+import com.shapebox.demo.dto.LoginRequest;
 import com.shapebox.demo.dto.UsuarioRequest;
 import com.shapebox.demo.dto.UsuarioResponse;
 import com.shapebox.demo.entity.Usuario;
@@ -19,24 +20,24 @@ public class UsuarioService {
 
     public void criarUsuario(UsuarioRequest usuarioRequest){
         if (repository.findByCpf(usuarioRequest.getCpf()) != null){
-            throw new DataIntegrityViolationException("J· existe um usu·rio cadastrado com o CPF: " + usuarioRequest.getCpf());
+            throw new DataIntegrityViolationException("J√° existe um usu√°rio cadastrado com o CPF: " + usuarioRequest.getCpf());
         }
         if (repository.findByEmail(usuarioRequest.getEmail()) != null){
-            throw new DataIntegrityViolationException("J· existe um usu·rio cadastrado com o E-mail: " + usuarioRequest.getEmail());
+            throw new DataIntegrityViolationException("J√° existe um usu√°rio cadastrado com o E-mail: " + usuarioRequest.getEmail());
         }
         Usuario usuario = mapper.map(usuarioRequest, Usuario.class);
         repository.save(usuario);
     }
 
     public UsuarioResponse buscarUsuario(Long id){
-        Usuario usuario = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usu·rio n„o encontrado com o ID: " + id));
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usu√°rio n√£o encontrado com o ID: " + id));
         return mapper.map(usuario, UsuarioResponse.class);
     }
 
     public UsuarioResponse buscarUsuarioPorCpf(String cpf){
         Usuario usuario = repository.findByCpf(cpf);
         if (usuario == null){
-            throw new EntityNotFoundException("Usu·rio n„o encontrado com o CPF: " + cpf);
+            throw new EntityNotFoundException("Usu√°rio n√£o encontrado com o CPF: " + cpf);
         }
         return mapper.map(usuario, UsuarioResponse.class);
     }
@@ -46,6 +47,23 @@ public class UsuarioService {
         usuario.setNome(usuarioRequest.getNome());
         usuario.setEmail(usuarioRequest.getEmail());
         usuario.setSenha(usuarioRequest.getSenha());
+        repository.save(usuario);
+    }
+
+    public boolean login(LoginRequest loginRequest) {
+    	Usuario usuario = repository.findByEmail(loginRequest.getEmail());
+    	if (usuario == null) {
+    		return false;
+    	}
+        return usuario.getSenha().equals(loginRequest.getSenha());
+    }
+
+    public void resetarSenha(LoginRequest loginRequest){
+        Usuario usuario = repository.findByEmail(loginRequest.getEmail());
+        if (usuario == null){
+            throw new EntityNotFoundException("E-mail: "+ loginRequest.getEmail() + " n√£o encontrado na base de dados.");
+        }
+        usuario.setSenha(loginRequest.getSenha());
         repository.save(usuario);
     }
 }

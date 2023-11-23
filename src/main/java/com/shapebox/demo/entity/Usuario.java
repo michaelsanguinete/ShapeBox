@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -19,12 +20,21 @@ public class Usuario {
     private Long id;
     @NotNull
     private String nome;
+    private LocalDate dataNascimento;
+    private String sexo;
+    private String telefone;
+
     @NotNull @Column(unique = true)
     private String email;
+
     @NotNull
     private String senha;
-    @CPF @Column(unique = true)
+
+    @CPF(message = "CPF inválido") @Column(unique = true)
     private String cpf;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Endereco endereco;
 
     @OneToMany(mappedBy = "usuario")
     private List<Pedido> pedidos;
