@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
-    public List<Produto> findBySku(String sku);
+    Produto findBySku(String sku);
 
     @Modifying
     @Transactional
     @Query("update Produto p set p.quantidadeEstoque = ?1 where p.sku = ?2")
-    public void editarQuantidadeEstoqueBySku(int quantidadeEstoque, String sku);
+    void editarQuantidadeEstoqueBySku(int quantidadeEstoque, String sku);
 }

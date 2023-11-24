@@ -16,7 +16,6 @@ public class ProdutoRequest {
     private String categoria;
     private String sku;
     private String tamanhoDisponivel;
-    private String imagemUrl;
     private int quantidadeEstoque;
     private String cor;
 }

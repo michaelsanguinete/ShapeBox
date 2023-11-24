@@ -22,7 +22,8 @@ public class Produto {
     private String marca;
     private String categoria;
     private String tamanhoDisponivel;
-    private String imagemUrl;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "produto")
+    private List<Imagem> imagens;
     private int quantidadeEstoque;
     @Column(unique = true)
     private String sku;
